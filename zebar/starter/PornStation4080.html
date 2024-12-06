@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Base styles for better consistency across platforms (aka. CSS reset). -->
+    <link rel="stylesheet" type="text/css" href="../normalize.css" />
+
+    <!-- Custom styles. -->
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+
+    <!-- Add empty favicon to suppress not found errors. -->
+    <link rel="icon" href="data:;" />
+
+    <!-- Allows React to be run buildless via "text/babel" script below. -->
+    <script
+      src="https://unpkg.com/@babel/standalone@7.25.6/babel.min.js"
+      integrity="sha256-aS0B0wnsaDByLfE16h4MDCP1fQFccysd1YWOcV+gbBo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+      import React, {
+        useState,
+        useEffect,
+      } from 'https://esm.sh/react@18?dev';
+      import { createRoot } from 'https://esm.sh/react-dom@18/client?dev';
+      import * as zebar from 'https://esm.sh/zebar@2';
+
+      const providers = zebar.createProviderGroup({
+        glazewm: { type: 'glazewm' },
+        keyboard: { type: 'keyboard' },
+        audio: { type: 'audio' },
+        media: { type: 'media' },
+        date: { type: 'date', formatting: 'yyyy LLL dd EEE T ss' },
+        weather: {
+          type: 'weather',
+          latitude: 25.238704,//Guilin
+          longitude: 110.1750728
+        },
+        network: { type: 'network' },
+        ip: { type: 'ip' }, //, refreshInterval: 1800000 },
+        disk: { type: 'disk' },
+        memory: { type: 'memory' },
+        cpu: { type: 'cpu' },
+      });
+
+      createRoot(document.getElementById('root')).render(<App />);
+
+      function App() {
+        const [output, setOutput] = useState(providers.outputMap);
+
+        useEffect(() => {
+          providers.onOutput(() => setOutput(providers.outputMap));
+        }, []);
+
+        // Get icon to show for current weather status.
+        function getWeatherIcon(weatherOutput) {
+          switch (weatherOutput.status) {
+            case 'clear_day':
+              return <i className="nf nf-weather-day_sunny"></i>;
+            case 'clear_night':
+              return <i className="nf nf-weather-night_clear"></i>;
+            case 'cloudy_day':
+              return <i className="nf nf-weather-day_cloudy"></i>;
+            case 'cloudy_night':
+              return <i className="nf nf-weather-night_alt_cloudy"></i>;
+            case 'light_rain_day':
+              return <i className="nf nf-weather-day_sprinkle"></i>;
+            case 'light_rain_night':
+              return <i className="nf nf-weather-night_alt_sprinkle"></i>;
+            case 'heavy_rain_day':
+              return <i className="nf nf-weather-day_rain"></i>;
+            case 'heavy_rain_night':
+              return <i className="nf nf-weather-night_alt_rain"></i>;
+            case 'snow_day':
+              return <i className="nf nf-weather-day_snow"></i>;
+            case 'snow_night':
+              return <i className="nf nf-weather-night_alt_snow"></i>;
+            case 'thunder_day':
+              return <i className="nf nf-weather-day_lightning"></i>;
+            case 'thunder_night':
+              return <i className="nf nf-weather-night_alt_lightning"></i>;
+          }
+        }
+
+        function getVolumeIcon(volume, onClick) {
+          if (volume === 0) {
+            return (
+              <i
+                className="nf nf-md-volume_off volume-icon"
+                onClick={onClick}
+              ></i>
+            );
+          } else if (volume <= 20) {
+            return (
+              <i
+                className="nf nf-md-volume_low volume-icon"
+                onClick={onClick}
+              ></i>
+            );
+          } else if (volume <= 60) {
+            return (
+              <i
+                className="nf nf-md-volume_medium volume-icon"
+                onClick={onClick}
+              ></i>
+            );
+          } else {
+            return (
+              <i
+                className="nf nf-md-volume_high volume-icon"
+                onClick={onClick}
+              ></i>
+            );
+          }
+        }
+
+        function toggleMute() {
+          if (output.audio.defaultPlaybackDevice) {
+            const currentVolume = output.audio.defaultPlaybackDevice.volume;
+            const newVolume = currentVolume === 0 ? 80 : 0;
+            output.audio.setVolume(newVolume, {
+              deviceId: output.audio.defaultPlaybackDevice.deviceId,
+            });
+          }
+        }
+
+        function formatNetworkSpeed(bytesPerSecond) {
+          const bitsPerSecond = bytesPerSecond * 8;
+          if (bitsPerSecond >= 1_000_000_000) {
+            return `${(bitsPerSecond / 1_000_000_000).toFixed(1)} Gbps`;
+          } else if (bitsPerSecond >= 1_000_000) {
+            return `${(bitsPerSecond / 1_000_000).toFixed(1)} Mbps`;
+          } else if (bitsPerSecond >= 1_000) {
+            return `${(bitsPerSecond / 1_000).toFixed(1)} Kbps`;
+          } else {
+            return `${bitsPerSecond.toFixed(1)} bps`;
+          }
+        }
+
+        function formatBytes(bytes) {
+          if (bytes === 0) return '0 Bytes';
+          const k = 1024;
+          const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+          return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
+        }
+
+        return (
+          <div className="app">
+            <div className="left">
+              <i className="logo nf nf-fa-windows"></i>
+              {output.glazewm && (
+                <>
+                  {output.glazewm.bindingModes.map(bindingMode => (
+                    <button
+                      className="binding-mode"
+                      key={bindingMode.name}
+                    >
+                      {bindingMode.displayName ?? bindingMode.name}
+                    </button>
+                  ))}
+
+                  <button
+                    className={`tiling-direction nf ${output.glazewm.tilingDirection === 'horizontal' ? 'nf-md-swap_horizontal' : 'nf-md-swap_vertical'}`}
+                    onClick={() =>
+                      output.glazewm.runCommand('toggle-tiling-direction')
+                    }
+                  ></button>
+                </>
+              )}
+
+              {output.glazewm && (
+                <div className="workspaces">
+                  {output.glazewm.currentWorkspaces.map(workspace => (
+                    <button
+                      className={`workspace ${workspace.hasFocus && 'focused'} ${workspace.isDisplayed && 'displayed'}`}
+                      onClick={() =>
+                        output.glazewm.runCommand(
+                          `focus --workspace ${workspace.name}`,
+                        )
+                      }
+                      key={workspace.name}
+                    >
+                      {workspace.displayName ?? workspace.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {output.keyboard && (
+                <div className="keyboard">
+                  <i className="nf nf-md-keyboard"></i>
+                  {output.keyboard.layout}
+                </div>
+              )}
+
+              {output.audio && (
+                <div className="audio">
+                  {getVolumeIcon(output.audio.defaultPlaybackDevice?.volume || 0, toggleMute)}
+                  <span className="audio-volume">
+                    {output.audio.defaultPlaybackDevice?.volume || 0}%
+                  </span>
+                </div>
+              )}
+
+              {output.media?.currentSession?.title && (
+                <div className="media">
+                  <span
+                    className="media-control previous"
+                    onClick={() => {
+                      if (output.media.currentSession) {
+                        output.media.previous({ sessionId: output.media.currentSession.sessionId });
+                      }
+                    }}
+                  >
+                    <i className="nf nf-md-skip_previous"></i>
+                  </span>
+                  <span
+                    className={`media-control ${
+                      output.media.currentSession?.isPlaying ? "pause" : "play"
+                    }`}
+                    onClick={() => {
+                      if (output.media.currentSession) {
+                        output.media.togglePlayPause({ sessionId: output.media.currentSession.sessionId });
+                      }
+                    }}
+                  >
+                    {output.media.currentSession?.isPlaying ? (
+                      <i className="nf nf-md-pause"></i>
+                    ) : (
+                      <i className="nf nf-md-play"></i>
+                    )}
+                  </span>
+                  <span
+                    className="media-control next"
+                    onClick={() => {
+                      if (output.media.currentSession) {
+                        output.media.next({ sessionId: output.media.currentSession.sessionId });
+                      }
+                    }}
+                  >
+                    <i className="nf nf-md-skip_next"></i>
+                  </span>
+                  <span className="media-title">{output.media.currentSession.title}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="center">
+              <div className="date">
+                {output.date?.formatted}
+              </div>
+
+              {output.weather && (
+                <div className="weather">
+                  {getWeatherIcon(output.weather)}
+                  {Math.round(output.weather.celsiusTemp)}°C
+                </div>
+              )}
+            </div>
+
+            <div className="right">
+              {output.network && (
+                <div className="network">
+                  <div className="network-traffic">
+                    <div>
+                      <i className="nf nf-md-upload"></i>
+                      <span className="network-transmitted">{formatNetworkSpeed(output.network.traffic.transmitted.bytes)}</span>
+                    </div>
+                    <div>
+                      <i className="nf nf-md-download"></i>
+                      <span className="network-received">{formatNetworkSpeed(output.network.traffic.received.bytes)}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {output.ip && (
+                <div className="ip">
+                  <div className="ip-info">
+                    <div>
+                      <i className="nf nf-md-ip"></i> {/* IP 地址图标 */}
+                      <span className="ip-address">{output.ip.address}</span>
+                  </div>
+                  <div>
+                      <i className="nf nf-md-city"></i> {/* 城市图标 */}
+                      <span className="ip-city">{output.ip.approxCity}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {output.disk && (
+                <div className="disk">
+                  <div className="disk-icon">
+                    <i className="nf nf-fa-hard_drive"></i> {/* 共享的硬盘图标 */}
+                  </div>
+                  <div className="disk-info">
+                    {output.disk.disks
+                      .filter(
+                        (disk) =>
+                          disk.name?.toLowerCase() === "windows" || disk.name?.toLowerCase() === "main"
+                      )
+                      .map((disk, index) => {
+                        const available = disk.availableSpace.bytes;
+
+                        // 根据盘的名称显示对应的盘符
+                        let diskLabel = '';
+                        if (disk.name?.toLowerCase() === "windows") {
+                          diskLabel = 'C:';
+                        } else if (disk.name?.toLowerCase() === "main") {
+                          diskLabel = 'D:';
+                        } else {
+                          diskLabel = disk.name; // 默认显示名称
+                        }
+
+                        return (
+                          <div className="disk-item" key={index}>
+                            <span className="disk-name">{diskLabel}</span>
+                            <span className="disk-available">{formatBytes(available)}</span>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+
+
+              {output.memory && (
+                <div className="memory">
+                  <i className="nf nf-fae-chip"></i>
+                  {Math.round(output.memory.usage)}%
+                </div>
+              )}
+
+              {output.cpu && (
+                <div className="cpu">
+                  <i className="nf nf-oct-cpu"></i>
+
+                  {/* Change the text color if the CPU usage is high. */}
+                  <span
+                    className={output.cpu.usage > 85 ? 'high-usage' : ''}
+                  >
+                    {Math.round(output.cpu.usage)}%
+                  </span>
+                </div>
+              )}
+              
+              
+
+              
+
+              
+              
+              
+
+            </div>
+          </div>
+        );
+      }
+    </script>
+  </body>
+</html>
