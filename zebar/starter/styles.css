@@ -64,7 +64,6 @@ body,
 .audio,
 .date,
 .network,
-.ip,
 .disk,
 .memory {
   margin-right: 20px;
@@ -75,15 +74,13 @@ body,
 .audio,
 .media,
 .disk,
-.network,
-.ip {
+.network {
   display: flex;
   align-items: center;
 }
 
 .disk-info,
-.network-traffic,
-.ip-info {
+.network-traffic { 
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -123,10 +120,6 @@ body,
   margin-right: 4px;
 }
 
-.keyboard {
-  margin-right: 15px;
-}
-
 .volume-icon {
   margin-top: 0.8px;
 }
@@ -162,12 +155,12 @@ body,
 
 @media (max-width: 2388px) {
   .media-title {
-    max-width: 150px;
+    max-width: 160px;
   }
 }
 
-.ip-info i {
-  margin: 0;
+.keyboard {
+  margin-right: 15px;
 }
 
 .cpu .high-usage {
