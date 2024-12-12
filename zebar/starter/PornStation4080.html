@@ -33,7 +33,6 @@
 
       const providers = zebar.createProviderGroup({
         glazewm: { type: 'glazewm' },
-        keyboard: { type: 'keyboard' },
         audio: { type: 'audio' },
         media: { type: 'media' },
         date: { type: 'date', formatting: 'yyyy LLL dd EEE T ss' },
@@ -42,8 +41,8 @@
           latitude: 25.238704,//Guilin
           longitude: 110.1750728
         },
+        keyboard: { type: 'keyboard' },
         network: { type: 'network' },
-        ip: { type: 'ip' }, //, refreshInterval: 1800000 },
         disk: { type: 'disk' },
         memory: { type: 'memory' },
         cpu: { type: 'cpu' },
@@ -193,13 +192,6 @@
                 </div>
               )}
 
-              {output.keyboard && (
-                <div className="keyboard">
-                  <i className="nf nf-md-keyboard"></i>
-                  {output.keyboard.layout}
-                </div>
-              )}
-
               {output.audio && (
                 <div className="audio">
                   {getVolumeIcon(output.audio.defaultPlaybackDevice?.volume || 0, toggleMute)}
@@ -266,6 +258,13 @@
             </div>
 
             <div className="right">
+              {output.keyboard && (
+                <div className="keyboard">
+                  <i className="nf nf-md-keyboard"></i>
+                  {output.keyboard.layout}
+                </div>
+              )}
+
               {output.network && (
                 <div className="network">
                   <div className="network-traffic">
@@ -276,21 +275,6 @@
                     <div>
                       <i className="nf nf-md-download"></i>
                       <span className="network-received">{formatNetworkSpeed(output.network.traffic.received.bytes)}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {output.ip && (
-                <div className="ip">
-                  <div className="ip-info">
-                    <div>
-                      <i className="nf nf-md-ip"></i> {/* IP 地址图标 */}
-                      <span className="ip-address">{output.ip.address}</span>
-                  </div>
-                  <div>
-                      <i className="nf nf-md-city"></i> {/* 城市图标 */}
-                      <span className="ip-city">{output.ip.approxCity}</span>
                     </div>
                   </div>
                 </div>
@@ -331,7 +315,6 @@
                 </div>
               )}
 
-
               {output.memory && (
                 <div className="memory">
                   <i className="nf nf-fae-chip"></i>
@@ -351,15 +334,6 @@
                   </span>
                 </div>
               )}
-              
-              
-
-              
-
-              
-              
-              
-
             </div>
           </div>
         );
