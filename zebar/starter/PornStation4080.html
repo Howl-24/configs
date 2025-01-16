@@ -38,8 +38,10 @@
         date: { type: 'date', formatting: 'yyyy LLL dd EEE T ss' },
         weather: {
           type: 'weather',
-          latitude: 25.238704,//Guilin
-          longitude: 110.1750728
+          latitude: 27.81697,//Yichun
+          longitude: 114.4112498,
+          // latitude: 25.238704,//Guilin
+          // longitude: 110.1750728
         },
         keyboard: { type: 'keyboard' },
         network: { type: 'network' },
@@ -122,7 +124,7 @@
         function toggleMute() {
           if (output.audio.defaultPlaybackDevice) {
             const currentVolume = output.audio.defaultPlaybackDevice.volume;
-            const newVolume = currentVolume === 0 ? 80 : 0;
+            const newVolume = currentVolume === 0 ? 50 : 0;
             output.audio.setVolume(newVolume, {
               deviceId: output.audio.defaultPlaybackDevice.deviceId,
             });

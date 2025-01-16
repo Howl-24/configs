@@ -159,6 +159,12 @@ body,
   }
 }
 
+@media (max-width: 1080px) {
+  .media-title {
+    max-width: 100px;
+  }
+}
+
 .keyboard {
   margin-right: 15px;
 }
