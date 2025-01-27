@@ -30,6 +30,7 @@
         "memory",
         "swap",
         "display",
+        "brightness",
         "battery",
         "poweradapter",
         "bluetooth",
