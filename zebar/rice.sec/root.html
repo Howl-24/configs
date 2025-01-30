@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Base styles for better consistency across platforms (aka. CSS reset). -->
+    <link rel="stylesheet" type="text/css" href="../normalize.css" />
+
+    <!-- Custom styles. -->
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+
+    <!-- Add empty favicon to suppress not found errors. -->
+    <link rel="icon" href="data:;" />
+
+    <!-- Allows React to be run buildless via "text/babel" script below. -->
+    <script
+      src="https://unpkg.com/@babel/standalone@7.25.6/babel.min.js"
+      integrity="sha256-aS0B0wnsaDByLfE16h4MDCP1fQFccysd1YWOcV+gbBo="
+      crossorigin="anonymous"
+    ></script>
+    
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+      import React, {
+        useState,
+        useEffect,
+      } from 'https://esm.sh/react@18?dev';
+      import { createRoot } from 'https://esm.sh/react-dom@18/client?dev';
+      import * as zebar from 'https://esm.sh/zebar@2';
+
+      const providers = zebar.createProviderGroup({
+        glazewm: { type: 'glazewm' },
+      });
+
+      createRoot(document.getElementById('root')).render(<App />);
+
+      function App() {
+        const [output, setOutput] = useState(providers.outputMap);
+        const [title, setTitle] = useState('');
+        const [animating, setAnimating] = useState(false);
+        const [blockAnimating, setBlockAnimating] = useState(false);
+        const [mediaText, setMediaText] = useState('');
+        const [containerWidth, setContainerWidth] = useState('auto');
+        
+
+        useEffect(() => {
+          const buttonCount = output.glazewm?.currentWorkspaces.length || 0;
+
+          const buttonWidth = 20;
+          const margin = 2;
+          const totalButtonWidth = buttonWidth + margin * 2;
+
+          const width = buttonCount * totalButtonWidth + 18;
+          setContainerWidth(`${width}px`);
+          
+        }, [output.glazewm?.currentWorkspaces]);
+
+        useEffect(() => {
+          providers.onOutput(() => setOutput(providers.outputMap));
+        }, []);
+
+        const focusedWorkspace = output?.glazewm?.focusedWorkspace;
+        const focusedWindowTitle = output?.glazewm?.focusedContainer?.title;
+        const workspaceName = focusedWorkspace && focusedWorkspace.name;
+        let newTitle = focusedWindowTitle || workspaceName;
+
+        if (/^[1-9]$/.test(newTitle)) {
+            newTitle = "Desktop";
+        }
+
+        useEffect(() => {
+          if (newTitle !== title) {
+            setAnimating(true);
+            setTimeout(() => {
+              setTitle(newTitle);
+              setAnimating(false);
+            }, 250);
+          }
+        }, [newTitle, title]);
+
+        useEffect(() => {
+          if (output.media && output.media.currentSession) {
+            setBlockAnimating(false);
+            setMediaText(`${output.media.currentSession.title} - ${output.media.currentSession.artist}`);
+          } else {
+            setBlockAnimating(true);
+          }
+        }, [output.media, output.media?.currentSession]);
+
+        return (
+          <div className="app">
+            <div className="left">
+              <div className="kip-blocks">
+                {output.glazewm && (
+                  <>
+                    {output.glazewm.bindingModes.map(bindingMode => (
+                      <button
+                        className="binding-mode"
+                        key={bindingMode.name}
+                      >
+                        {bindingMode.displayName ?? bindingMode.name}
+                      </button>
+                    ))}
+
+                    <button
+                      className={`tiling-direction nf ${output.glazewm.tilingDirection === 'horizontal' ? 'nf-md-swap_horizontal' : 'nf-md-swap_vertical'}`}
+                      onClick={() =>
+                        output.glazewm.runCommand('toggle-tiling-direction')
+                      }
+                    ></button>
+                  </>
+                )}
+              </div>
+              <div className="kip-blocks" style={{ width: containerWidth }}>
+                {output.glazewm && (
+                  <div className="workspaces">
+                    {output.glazewm.currentWorkspaces.map(workspace => (
+                      <button
+                        className={`workspace ${workspace.hasFocus ? 'focused' : ''} ${workspace.isDisplayed ? 'displayed' : ''}`}
+                        onClick={() =>
+                          output.glazewm.runCommand(
+                            `focus --workspace ${workspace.name}`,
+                          )
+                        }
+                        key={workspace.name}
+                      >
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="center">
+            </div>
+
+            <div className="right">
+              <div className={`title-animation ${animating ? 'title-animation' : 'title-animation-enter'}`}>
+                  {title}
+              </div>
+            </div>
+          </div>
+        );
+      }
+    </script>
+  </body>
+</html>
