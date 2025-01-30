@@ -2,7 +2,10 @@ general:
   # Commands to run when the WM has started. This is useful for running a
   # script or launching another application.
   # Example: The below command launches Zebar.
-  startup_commands: ['shell-exec zebar','focus --workspace 1']
+  startup_commands: [
+    'shell-exec zebar',
+    'focus --workspace 1'
+  ]
 
   # Commands to run just before the WM is shutdown.
   # Example: The below command kills Zebar.
@@ -62,6 +65,13 @@ window_effects:
       # Allowed values: 'square', 'rounded', 'small_rounded'.
       style: 'square'
 
+    # Change the transparency of the window.
+    transparency:
+      enabled: true
+      # can be something like '95%' or '0.95' for slightly transparent windows.
+      # '0' or '0%' is fully transparent (and, by consequence, unfocusable).
+      opacity: '99%'
+
   # Visual effects to apply to non-focused windows.
   other_windows:
     border:
@@ -72,6 +82,9 @@ window_effects:
     corner_style:
       enabled: false
       style: 'square'
+    transparency:
+      enabled: true
+      opacity: '95%'
 
 window_behavior:
   # New windows are created in this state whenever possible.
@@ -120,6 +133,9 @@ window_rules:
       - window_title: { regex: '[Pp]icture.in.[Pp]icture' }
         window_class: { regex: 'Chrome_WidgetWin_1|MozillaDialogClass' }
 
+      # Ignores any OneDrive windows.
+      - window_process: { equals: 'OneDrive' }
+
       # Ignore rules for various 3rd-party apps.
       - window_process: { equals: 'PowerToys' }
         window_class: { regex: 'HwndWrapper\[PowerToys\.PowerAccent.*?\]' }
@@ -127,7 +143,8 @@ window_rules:
         window_title: { regex: '.*? - Peek' }
       - window_process: { equals: 'Lively' }
         window_class: { regex: 'HwndWrapper' }
-  
+      - window_process: { equals: 'LosslessScaling' }
+
   - commands: ['set-floating']
     match:
       - window_process: { equals: 'SnippingTool' }
@@ -194,32 +211,33 @@ keybindings:
   # resizing via arrow keys or HJKL. The binding mode is defined above with
   # the name 'resize'.
   - commands: ['wm-enable-binding-mode --name resize']
-    bindings: ['alt+shift+r']
+    bindings: ['alt+r']
 
-  # Disables all keybindings until alt+shift+p is pressed again.
-  - commands: ['wm-enable-binding-mode --name pause']
+  # Disables window management and all other keybindings until alt+shift+p
+  # is pressed again.
+  - commands: ['wm-toggle-pause']
     bindings: ['alt+shift+p']
 
   # Change tiling direction. This determines where new tiling windows will
   # be inserted.
   - commands: ['toggle-tiling-direction']
-    bindings: ['alt+x']
+    bindings: ['alt+v']
 
   # Change focus from tiling windows -> floating -> fullscreen.
   - commands: ['wm-cycle-focus']
-    bindings: ['alt+z']
+    bindings: ['alt+space']
 
   # Change the focused window to be floating.
   - commands: ['toggle-floating --centered']
-    bindings: ['alt+v']
+    bindings: ['alt+shift+space']
 
   # Change the focused window to be tiling.
   - commands: ['toggle-tiling']
-    bindings: ['alt+b']
+    bindings: ['alt+t']
 
   # Change the focused window to be fullscreen.
   - commands: ['toggle-fullscreen']
-    bindings: ['alt+n']
+    bindings: ['alt+f']
 
   # Minimize focused window.
   - commands: ['toggle-minimized']
@@ -244,13 +262,13 @@ keybindings:
   # Launch CMD terminal. Alternatively, use `shell-exec wt` or
   # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
   # Terminal and Git Bash respectively.
-  - commands: ['shell-exec cmd']
+  - commands: ['shell-exec wt']
     bindings: ['alt+enter']
 
-  # Focus the next/previous workspace defined in `workspaces` config.
-  - commands: ['focus --next-workspace']
+  # Focus the next/previous active workspace defined in `workspaces` config.
+  - commands: ['focus --next-active-workspace']
     bindings: ['alt+s']
-  - commands: ['focus --prev-workspace']
+  - commands: ['focus --prev-active-workspace']
     bindings: ['alt+a']
 
   # Focus the workspace that last had focus.

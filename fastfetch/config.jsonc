@@ -1,84 +1,117 @@
-// Load with --load-config examples/2.jsonc
-// Note that you must replace the image path to an existing image to display it.
-
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     "logo": {
-        "source": "C:/Users/Howl/.config/fastfetch/logo/ascii/reimu.txt",
+        "source": "D:/Share/ASCii/fastfetch/4-3/reimu-dairi.txt",
         "color":{"1": "red","2": "white"}
     },
     "display": {
-        "separator": "  ",
+        "separator": "->   ",
+        "color": {
+            "separator": "1" // Bold
+        },
         "constants": [
-            "─────────────────" // {$1}, used in Custom module
+            "───────────────────────────"
         ],
         "key": {
-            "type": "icon",
-            "paddingLeft": 2
+            "type": "both",
+            "paddingLeft": 4
         }
     },
     "modules": [
         {
-            "type": "custom", // HardwareStart
-            // {#1} is equivalent to `\u001b[1m`. {#} is equivalent to `\u001b[m`
-            "format": "┌{$1} {#1}Hardware Information{#} {$1}┐"
-        },
-        "host",
-        "cpu",
-        "gpu",
-        "disk",
-        "memory",
-        "swap",
-        "display",
-        "brightness",
-        "battery",
-        "poweradapter",
-        "bluetooth",
-        "sound",
-        "gamepad",
-        {
-            "type": "custom", // SoftwareStart
-            "format": "├{$1} {#1}Software Information{#} {$1}┤"
-        },
-        {
             "type": "title",
-            "keyIcon": "",
-            "key": "Title", // Title module has no key by default, so that icon is not displayed
-            "format": "{user-name}@{host-name}"
+            "format": "                             {user-name-colored}{at-symbol-colored}{host-name-colored}"
         },
-        "os",
-        "kernel",
-        "lm",
-        "de",
-        "wm",
-        "shell",
-        "terminal",
-        "terminalfont",
-        "theme",
-        "packages",
-        "uptime",
-        "media",
+        "break",
         {
+            "type": "custom",
+            "format": "┌{$1} {#1}System Information{#} {$1}┐"
+        },
+        "break",
+        {
+            "key": "OS           ",
+            "keyColor": "red",
+            "type": "os"
+        },
+        {
+            "key": "Machine      ",
+            "keyColor": "green",
+            "type": "host"
+        },
+        {
+            "key": "Kernel       ",
+            "keyColor": "magenta",
+            "type": "kernel"
+        },
+        {
+            "key": "Uptime       ",
+            "keyColor": "red",
+            "type": "uptime"
+        },
+        {
+            "key": "Resolution   ",
+            "keyColor": "yellow",
+            "type": "display",
+            "compactType": "original-with-refresh-rate"
+        },
+        {
+            "key": "WM           ",
+            "keyColor": "blue",
+            "type": "wm"
+        },
+        {
+            "key": "DE           ",
+            "keyColor": "green",
+            "type": "de"
+        },
+        {
+            "key": "Shell        ",
+            "keyColor": "cyan",
+            "type": "shell"
+        },
+        {
+            "key": "Terminal     ",
+            "keyColor": "red",
+            "type": "terminal"
+        },
+        {
+            "key": "CPU          ",
+            "keyColor": "yellow",
+            "type": "cpu"
+        },
+        {
+            "key": "GPU          ",
+            "keyColor": "blue",
+            "type": "gpu"
+        },
+        {
+            "key": "Memory       ",
+            "keyColor": "magenta",
+            "type": "memory"
+        },
+        {
+            "key": "Local IP     ",
+            "keyColor": "red",
             "type": "localip",
             "compact": true
         },
         {
+            "key": "Public IP    ",
+            "keyColor": "cyan",
             "type": "publicip",
             "timeout": 1000
         },
+        "break",
         {
-            "type": "wifi",
-            "format": "{ssid}"
+            "type": "custom",
+            "format": "└{$1}────────────────────{$1}┘"
         },
-        "locale",
-        {
-            "type": "custom", // InformationEnd
-            "format": "└{$1}──────────────────────{$1}┘"
-        },
+        "break",
         {
             "type": "colors",
-            "paddingLeft": 2,
+            "paddingLeft": 34,
             "symbol": "circle"
         }
     ]
 }
+
