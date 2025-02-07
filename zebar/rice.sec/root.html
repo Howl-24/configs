@@ -82,15 +82,6 @@
           }
         }, [newTitle, title]);
 
-        useEffect(() => {
-          if (output.media && output.media.currentSession) {
-            setBlockAnimating(false);
-            setMediaText(`${output.media.currentSession.title} - ${output.media.currentSession.artist}`);
-          } else {
-            setBlockAnimating(true);
-          }
-        }, [output.media, output.media?.currentSession]);
-
         return (
           <div className="app">
             <div className="left">
