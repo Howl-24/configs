@@ -36,6 +36,18 @@ $themeName = $theme.BaseName -replace "\.omp$", ""
 figlet -f $font.BaseName $themeName | cowsay -f $cow.BaseName | meow
 
 # =============================================================================
+# Yazi Shell wrapper
+function y {
+    $tmp = [System.IO.Path]::GetTempFileName()
+    yazi $args --cwd-file="$tmp"
+    $cwd = Get-Content -Path $tmp -Encoding UTF8
+    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+        Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
+    }
+    Remove-Item -Path $tmp
+}
+
+# =============================================================================
 # Utility functions for zoxide.
 # Call zoxide binary, returning the output as UTF-8.
 function global:__zoxide_bin {
