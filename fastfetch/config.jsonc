@@ -4,114 +4,82 @@
         "source": "D:/Share/ASCii/fastfetch/4-3/reimu-dairi.txt",
         "color":{"1": "red","2": "white"}
     },
-    "display": {
-        "separator": "->   ",
-        "color": {
-            "separator": "1" // Bold
-        },
-        "constants": [
-            "───────────────────────────"
-        ],
-        "key": {
-            "type": "both",
-            "paddingLeft": 4
-        }
-    },
     "modules": [
+        "title",
+        "separator",
         {
-            "type": "title",
-            "format": "                             {user-name-colored}{at-symbol-colored}{host-name-colored}"
+            "type": "os",
+            "keyColor": "yellow"
+        },
+        {
+            "type": "host",
+            "keyColor": "yellow"
+        },
+        {
+            "type": "kernel",
+            "keyColor": "yellow"
+        },
+        {
+            "type": "uptime",
+            "keyColor": "yellow"
         },
         "break",
         {
-            "type": "custom",
-            "format": "┌{$1} {#1}System Information{#} {$1}┐"
-        },
-        "break",
-        {
-            "key": "OS           ",
-            "keyColor": "red",
-            "type": "os"
+            "type": "shell",
+            "keyColor": "blue"
         },
         {
-            "key": "Machine      ",
-            "keyColor": "green",
-            "type": "host"
+            "type": "packages",
+            "keyColor": "blue"
         },
         {
-            "key": "Kernel       ",
-            "keyColor": "magenta",
-            "type": "kernel"
+            "type": "terminal",
+            "format": "{pretty-name}",
+            "keyColor": "blue"
         },
         {
-            "key": "Uptime       ",
-            "keyColor": "red",
-            "type": "uptime"
+            "type": "terminalfont",
+            "format": "{/name}{-}{/}{name}{?size} {size}{?}",
+            "keyColor": "blue"
         },
         {
-            "key": "Resolution   ",
-            "keyColor": "yellow",
             "type": "display",
-            "compactType": "original-with-refresh-rate"
+            "compactType": "original",
+            "key": "Resolution",
+            "keyColor": "blue"
+        },
+        "break",
+        {
+            "type": "cpu",
+            "keyColor": "red"
         },
         {
-            "key": "WM           ",
-            "keyColor": "blue",
-            "type": "wm"
+            "type": "gpu",
+            "key": "GPU",
+            "detectionMethod": "vulkan",
+            "keyColor": "red"
         },
         {
-            "key": "DE           ",
-            "keyColor": "green",
-            "type": "de"
+            "type": "memory",
+            "keyColor": "red"
         },
         {
-            "key": "Shell        ",
-            "keyColor": "cyan",
-            "type": "shell"
+            "type": "disk",
+            "folders": "/",
+            "keyColor": "red"
         },
+        "break",
         {
-            "key": "Terminal     ",
-            "keyColor": "red",
-            "type": "terminal"
-        },
-        {
-            "key": "CPU          ",
-            "keyColor": "yellow",
-            "type": "cpu"
-        },
-        {
-            "key": "GPU          ",
-            "keyColor": "blue",
-            "type": "gpu"
-        },
-        {
-            "key": "Memory       ",
-            "keyColor": "magenta",
-            "type": "memory"
-        },
-        {
-            "key": "Local IP     ",
-            "keyColor": "red",
             "type": "localip",
-            "compact": true
+            "compact": true,
+            "keyColor": "green"
         },
         {
-            "key": "Public IP    ",
-            "keyColor": "cyan",
             "type": "publicip",
-            "timeout": 1000
+            "timeout": 1000,
+            "keyColor": "green"
         },
         "break",
-        {
-            "type": "custom",
-            "format": "└{$1}────────────────────{$1}┘"
-        },
-        "break",
-        {
-            "type": "colors",
-            "paddingLeft": 34,
-            "symbol": "circle"
-        }
+        "colors"
     ]
 }
-
