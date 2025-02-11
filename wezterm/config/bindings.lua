@@ -172,20 +172,26 @@ local keys = {
    { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
    { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
 
+   -- panes: adjust pane size
+   { key = 'i',     mods = mod.SUPER_REV, action = act.AdjustPaneSize({ 'Up', 1 })},
+   { key = 'o',     mods = mod.SUPER_REV, action = act.AdjustPaneSize({ 'Down', 1 })},
+   { key = 'u',     mods = mod.SUPER_REV, action = act.AdjustPaneSize({ 'Left', 1 })},
+   { key = 'p',     mods = mod.SUPER_REV, action = act.AdjustPaneSize({ 'Right', 1 })},
+
    -- panes: navigation
    { key = 'k',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
    { key = 'j',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
    { key = 'h',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
    { key = 'l',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
    {
-      key = 'p',
+      key = 'g',
       mods = mod.SUPER_REV,
       action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
    },
 
    -- panes: scroll pane
-   { key = 'i',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
-   { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(5) },
+   { key = 'o',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
+   { key = 'i',        mods = mod.SUPER, action = act.ScrollByLine(5) },
    { key = 'PageUp',   mods = 'NONE',    action = act.ScrollByPage(-0.75) },
    { key = 'PageDown', mods = 'NONE',    action = act.ScrollByPage(0.75) },
 
