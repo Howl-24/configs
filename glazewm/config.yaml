@@ -329,3 +329,43 @@ keybindings:
     bindings: ['alt+shift+9']
   - commands: ['move --workspace 10', 'focus --workspace 10']
     bindings: ['alt+shift+0']
+
+# Toggle window tranparency.
+  - commands: ['shell-exec pwsh -NoProfile -WindowStyle Hidden -File "C:\Users\Howl\scr\GlazwmTransparencyToggle.ps1"']
+    bindings: ['alt+shift+t']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

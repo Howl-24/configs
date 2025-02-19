@@ -152,5 +152,7 @@ function bash { wsl bash $args }
 function apt { wsl sudo apt $args }
 function tmux { wsl tmux $args }
 function wtfutil { wsl wtfutil $args }
-function w3m { wsl w3m $args }
 function cmatrix { wsl cmatrix $args }
+function tty-clock { wsl tty-clock $args }
+function cbonsai { wsl cbonsai $args }
+

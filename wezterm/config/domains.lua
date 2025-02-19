@@ -4,8 +4,8 @@ return {
    ssh_domains = {
       -- yazi's image preview on Windows will only work if launched via ssh from WSL
       {
-         name = 'wsl.ssh',
-         remote_address = '192.168.0.196',
+         name = 'ssh:Pi',
+         remote_address = '10.34.127.55',
          multiplexing = 'None',
          default_prog = { 'bash', '-l' },
          ssh_option = {
