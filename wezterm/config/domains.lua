@@ -4,7 +4,7 @@ return {
    ssh_domains = {
       -- yazi's image preview on Windows will only work if launched via ssh from WSL
       {
-         name = 'ssh:Pi',
+         name = 'ssh.Pi',
          remote_address = '10.34.127.55',
          multiplexing = 'None',
          default_prog = { 'bash', '-l' },
@@ -20,7 +20,7 @@ return {
    -- ref: https://wezfurlong.org/wezterm/config/lua/WslDomain.html
    wsl_domains = {
       {
-         name = 'WSL:Debian',
+         name = 'WSL.Debian',
          distribution = 'Debian',
          username = 'howl',
          default_cwd = '/home/howl',
